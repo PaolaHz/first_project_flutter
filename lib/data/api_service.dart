@@ -4,7 +4,7 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'database_helper.dart';
 
 class ApiService {
-  final String baseUrl = 'http://10.0.2.2:3000/api';
+  final String baseUrl = 'http://192.168.1.70:3000/api';
 
   /// Método para validar credenciales y obtener el token JWT
   Future<String?> validar(String email, String password) async {
@@ -44,8 +44,6 @@ class ApiService {
 
   /// Método para obtener y guardar los artículos en SQLite
   Future<void> fetchAndSaveItems(jwtTokenReceived) async {
-
-    await DatabaseHelper.instance.deleteAllItems(); // Elimina todos los ítems actuales
 
     try {
       final response = await http.post(

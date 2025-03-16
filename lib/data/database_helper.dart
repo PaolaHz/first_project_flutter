@@ -16,8 +16,6 @@ class DatabaseHelper {
 
   Future<Database> _initDB() async {
     String path = join(await getDatabasesPath(), 'app_database.db');
-    // Eliminar la base de datos si es necesario (solo en desarrollo)
-    await deleteDatabase(path);  
     return await openDatabase(path, version: 1, onCreate: _createDB);
   }
 

@@ -20,7 +20,19 @@ class _ArticulosScreenState extends State<ArticulosScreen> {
 
   Future<void> _loadItems() async {
     await _apiService.fetchAndSaveItems(widget.jwtToken); 
-    final List<Articulo> items = await DatabaseHelper.instance.getAllArticulos();
+    
+    List<Articulo> items = await DatabaseHelper.instance.getAllArticulos();
+  
+  if (items.isEmpty) {
+    // Si no hay artículos en SQLite, intentamos obtenerlos del backend
+    try {
+      await _apiService.fetchAndSaveItems(widget.jwtToken);
+      // Después de guardar los artículos desde el backend, los volvemos a cargar desde SQLite
+      items = await DatabaseHelper.instance.getAllArticulos();
+    } catch (e) {
+      print("Error al cargar ítems desde el backend: $e");
+    }
+  }
     setState(() {
       articulos = items;  
     });
