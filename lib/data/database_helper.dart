@@ -63,36 +63,6 @@ class DatabaseHelper {
     });
   }
 
-  Future<List<Articulo>> getFavoriteItems() async {
-  final db = await instance.database;
-  final List<Map<String, dynamic>> maps = await db.query(
-    'items',
-    where: 'rating = ?',  // Filtra solo los artículos donde rating = 1
-    whereArgs: [1],       // Argumento para el filtro (rating = 1)
-  );
-
-  return List.generate(maps.length, (i) {
-    return Articulo(
-      nombre: maps[i]['itemName'],
-      vendedor: maps[i]['vendedor'],   
-      calificacion: maps[i]['calification'].toString(),
-      imageId: maps[i]['image_id'],
-      esFavorito: maps[i]['rating'] == 1,
-    );
-  });
-}
-
-  /// Marcar o desmarcar un ítem como favorito
-  Future<int> updateItem(int id, bool isFavorite) async {
-    Database db = await instance.database;
-    return await db.update(
-      'items',
-      {'rating': isFavorite ? 1 : 0},
-      where: 'id = ?',
-      whereArgs: [id],
-    );
-  }
-
   /// Eliminar todos los ítems de la BD
   Future<int> deleteAllItems() async {
     Database db = await instance.database;
