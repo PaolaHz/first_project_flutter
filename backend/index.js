@@ -28,22 +28,17 @@ const pool = mysql.createPool({
 
 // Login
 app.post('/api/login', async (req, res) => {
-  try {
 
-    console.log("entra aqui :) ");
     const { email, password } = req.body;
-    const [users] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
-    
+    console.log("entra aqui :), email: "+email+" password: "+password);
+    const [users] = await pool.query('SELECT * FROM usuarios WHERE email = ?', [email]);
+    console.log(users);
+
     if (users.length === 0) {
       return res.status(401).json({ error: 'Credenciales inválidas' });
     }
     
     const user = users[0];
-    const validPassword = await bcrypt.compare(password, user.password);
-    
-    if (!validPassword) {
-      return res.status(401).json({ error: 'Credenciales inválidas' });
-    }
     
     const token = jwt.sign(
       { userId: user.id },
@@ -51,20 +46,27 @@ app.post('/api/login', async (req, res) => {
       { expiresIn: '7d' }
     );
     
-    res.json({ token });
-    
-  } catch (error) {
-    res.status(500).json({ error: 'Error en el servidor' });
-  }
+    if(user.password == password){
+      console.log("son iguales");
+      return res.status(200).json({ token});
+    }
+    else{
+      console.log("No son iguales", password, user.password);
+      return res.status(401).json({ error: 'Credenciales inválidas' });
+    }
 });
 
 // Obtener artículos
-app.get('/api/articles', authenticateToken, async (req, res) => {
+app.post('/api/articles', authenticateToken, async (req, res) => {
+  const userId = req.user.userId; // Obtenemos el ID del usuario autenticado
+
+  console.log("entra a articles con userId: "+userId);
   try {
-    const [articles] = await pool.query('SELECT * FROM articles');
+    const [articles] = await pool.query('SELECT * FROM articulos where usuario_id = ?', [userId]);
+    console.log(articles);
     res.json(articles);
   } catch (error) {
-    res.status(500).json({ error: 'Error cargando artículos' });
+    res.status(500).json({ error: 'Error cargando artículos', error });
   }
 });
 
