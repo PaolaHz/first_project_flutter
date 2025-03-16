@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:parcial_moviles_1/data/api_service.dart';
 import 'package:parcial_moviles_1/data/local_storage.dart';
 import 'package:parcial_moviles_1/presentation/article/article_item.dart';
-import 'package:parcial_moviles_1/presentation/splash/splash.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -29,12 +27,9 @@ class _LoginPageState extends State<LoginPage> {
     String password = _passwordController.text.trim();
 
     String? token = await _apiService.validar(email, password);
-    print("Login exitoso ----------------------!!!!!!!!!!!. Token: $token, userId: $token");
 
     if (token != null) {
       await MySharedPrefsHelper.saveToken(token); // Guardamos el JWT
-      int userId = JwtDecoder.decode(token)['userId']; // Extraemos userId del token
-      print("Login exitoso ----------------------!!!!!!!!!!!. Token: $token, userId: $userId");
       if (!mounted) return;
       Navigator.pushReplacement(
         context,

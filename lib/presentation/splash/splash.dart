@@ -1,6 +1,5 @@
 // auth_check.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:parcial_moviles_1/data/local_storage.dart';
 import 'package:parcial_moviles_1/presentation/article/article_item.dart';

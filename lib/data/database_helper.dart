@@ -1,7 +1,5 @@
 import 'package:parcial_moviles_1/domain/articulo.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
 import 'package:path/path.dart';
 
 class DatabaseHelper {
@@ -39,7 +37,6 @@ class DatabaseHelper {
 
   /// Insertar un ítem con el mismo ID del backend
   Future<void> insertItem(Map<String, dynamic> item) async {
-    print("Insertando ítem: $item");
     final db = await database;
     try {
       await db.insert('items', item, conflictAlgorithm: ConflictAlgorithm.replace);

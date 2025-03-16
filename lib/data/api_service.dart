@@ -4,22 +4,19 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'database_helper.dart';
 
 class ApiService {
-  final String baseUrl = 'http://192.168.1.70:3000/api';
+  final String baseUrl = 'http://10.0.2.2:3000/api';
 
   /// Método para validar credenciales y obtener el token JWT
   Future<String?> validar(String email, String password) async {
 
-    print("Validando credenciales... email:$email, password: $password");
     try {
       final response = await http.post(
         Uri.parse('$baseUrl/login'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'email': email, 'password': password}),
       );
-        print("Token JWT ------------------!._!_!_!_!_!_!_!_!_!: ${response.body}");
 
       if (response.statusCode == 200) {
-        print("Autenticación exitosa. --------------- !!!_!_!_!_!"); 
         Map<String, dynamic> responseData = jsonDecode(response.body);
         return responseData['token']; // Retorna el token si la autenticación es exitosa
 
@@ -49,7 +46,6 @@ class ApiService {
   Future<void> fetchAndSaveItems(jwtTokenReceived) async {
 
     await DatabaseHelper.instance.deleteAllItems(); // Elimina todos los ítems actuales
-    print("Obteniendo y guardando ítems..., token: $jwtTokenReceived");
 
     try {
       final response = await http.post(
